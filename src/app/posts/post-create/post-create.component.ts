@@ -9,16 +9,19 @@ import { PostsService } from 'src/app/posts.service';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent {
-  constructor(public postsService: PostsService) {}
+  constructor(private postsService: PostsService) {}
 
   onAddPost = (form: NgForm) => {
     if (form.invalid) {
       return;
     }
     const post: Post = {
+      id: null,
       title: form.value.title,
       content: form.value.content,
     };
+
     this.postsService.addPost(post);
+    form.resetForm();
   };
 }
