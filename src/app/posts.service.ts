@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Post } from './posts/post.model';
-import { Subject } from 'rxjs';
+import { Subject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
@@ -13,11 +13,20 @@ export class PostsService {
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: Post[] }>(
-        'http://localhost:3000/api/posts'
+      .get<{ message: string; posts: any }>('http://localhost:3000/api/posts')
+      .pipe(
+        map((postData) => {
+          return postData.posts.map((post): Post => {
+            return {
+              id: post._id,
+              title: post.title,
+              content: post.content,
+            };
+          });
+        })
       )
-      .subscribe((postData) => {
-        this.posts = postData.posts;
+      .subscribe((transformedPosts) => {
+        this.posts = transformedPosts;
         this.postsUpdated.next([...this.posts]);
       });
   }
@@ -26,13 +35,31 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(post: Post) {
+  addPost(title: string, content: string) {
     this.http
-      .post<{ message: string }>('http://localhost:3000/api/posts', post)
+      .post<{ message: string; postId: string }>(
+        'http://localhost:3000/api/posts',
+        {
+          title,
+          content,
+        }
+      )
       .subscribe((responseData) => {
         console.log(responseData.message);
-        this.posts.push(post);
+        this.posts.push({ id: responseData.postId, title, content });
         this.postsUpdated.next([...this.posts]);
+      });
+  }
+
+  deletePost(id: string) {
+    if (!id) return;
+    this.http
+      .delete<{ message: string }>(`http://localhost:3000/api/posts/${id}`)
+      .subscribe((responseData) => {
+        console.log(responseData.message);
+        const updatedPosts = this.posts.filter((post) => post.id !== id);
+        this.posts = updatedPosts;
+        this.postsUpdated.next(this.posts ? [...this.posts] : []);
       });
   }
 }
