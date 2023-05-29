@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { PostListComponent } from './posts/post-list/post-list.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AppRoutiongModule } from './app-routing.module';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { AppRoutiongModule } from './app-routing.module';
     MatToolbarModule,
     MatExpansionModule,
     HttpClientModule,
+    MatProgressSpinnerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
