@@ -1,1 +1,20 @@
-<mat-toolbar color="primary">MyMessages</mat-toolbar>
+<mat-toolbar color="primary">
+  <span>
+    <a routerLink="/">MyMessages</a>
+  </span>
+  <span class="spacer"></span>
+  <ul>
+    <li>
+      <a
+        mat-button
+        color="accent"
+        routerLink="/create"
+        routerLinkActive="mat-accent"
+        #rla="routerLinkActive"
+        [ngClass]="{ 'mat-accent': rla.isActive }"
+      >
+        New Post
+      </a>
+    </li>
+  </ul>
+</mat-toolbar>
