@@ -2,6 +2,8 @@
 
 .env
 
+/backend/images
+
 # Compiled output
 /dist
 /tmp
