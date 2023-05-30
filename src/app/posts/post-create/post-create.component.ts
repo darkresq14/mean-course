@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/posts.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Post } from '../post.model';
-import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-post-create',
@@ -11,12 +10,11 @@ import { timeout } from 'rxjs';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent implements OnInit {
-  title = '';
-  content = '';
-  mode: 'Create' | 'Edit';
   private postId: string;
+  mode: 'Create' | 'Edit';
   post: Post;
   isLoading = false;
+  form: FormGroup;
 
   constructor(
     private postsService: PostsService,
@@ -25,6 +23,13 @@ export class PostCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.form = new FormGroup({
+      title: new FormControl(null, {
+        validators: [Validators.required, Validators.minLength(3)],
+      }),
+      content: new FormControl(null, { validators: [Validators.required] }),
+    });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('postId')) {
         this.mode = 'Edit';
@@ -38,6 +43,10 @@ export class PostCreateComponent implements OnInit {
               title: data.post.title,
               content: data.post.content,
             };
+            this.form.setValue({
+              title: data.post.title,
+              content: data.post.content,
+            });
           }
         });
       } else {
@@ -47,20 +56,23 @@ export class PostCreateComponent implements OnInit {
     });
   }
 
-  onSubmit = (form: NgForm) => {
-    if (form.invalid) {
+  onSubmit = () => {
+    if (this.form.invalid) {
       return;
     }
     this.isLoading = true;
     this.mode === 'Create'
-      ? this.postsService.addPost(form.value.title, form.value.content)
+      ? this.postsService.addPost(
+          this.form.value.title,
+          this.form.value.content
+        )
       : this.postsService.updatePost(
           this.postId,
-          form.value.title,
-          form.value.content
+          this.form.value.title,
+          this.form.value.content
         );
 
-    form.resetForm();
+    this.form.reset();
     this.isLoading = false;
     this.router.navigate(['/']);
   };
