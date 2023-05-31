@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/posts.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -20,8 +20,8 @@ export class PostCreateComponent implements OnInit {
 
   constructor(
     private postsService: PostsService,
-    public router: Router,
-    public route: ActivatedRoute
+    @Inject(Router) public router: Router,
+    @Inject(ActivatedRoute) public route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -51,8 +51,9 @@ export class PostCreateComponent implements OnInit {
               imagePath: data.post.imagePath,
             };
             this.form.setValue({
-              title: data.post.title,
-              content: data.post.content,
+              title: this.post.title,
+              content: this.post.content,
+              image: this.post.imagePath,
             });
           }
         });
@@ -88,7 +89,8 @@ export class PostCreateComponent implements OnInit {
       : this.postsService.updatePost(
           this.postId,
           this.form.value.title,
-          this.form.value.content
+          this.form.value.content,
+          this.form.value.image
         );
 
     this.form.reset();

@@ -60,18 +60,29 @@ export class PostsService {
       });
   }
 
-  updatePost(id: string, title: string, content: string) {
-    const post: Post = { id, title, content, imagePath: null };
+  updatePost(id: string, title: string, content: string, image: File | string) {
+    let postData: Post | FormData;
+    if (typeof image === 'string') {
+      postData = { id, title, content, imagePath: image };
+    } else {
+      postData = new FormData();
+      postData.append('id', id);
+      postData.append('title', title);
+      postData.append('content', content);
+      postData.append('image', image);
+    }
+
     this.http
-      .put<{ message: string }>(`http://localhost:3000/api/posts/${id}`, post)
+      .put<{ message: string; imagePath: string }>(
+        `http://localhost:3000/api/posts/${id}`,
+        postData
+      )
       .subscribe((responseData) => {
         console.log(responseData.message);
-        const updatedPosts = [
-          ...this.posts.map((mapPost) => {
-            if (mapPost.id === id) mapPost = post;
-            return mapPost;
-          }),
-        ];
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex((p) => p.id === id);
+        const post = { id, title, content, imagePath: responseData.imagePath };
+        updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
       });

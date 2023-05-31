@@ -45,16 +45,27 @@ router.post("", multer({ storage }).single("image"), (req, res, next) => {
   });
 });
 
-router.put("/:id", (req, res, next) => {
-  const post = new Post({
-    _id: req.body.id,
+router.put("/:id", multer({ storage }).single("image"), (req, res, next) => {
+  let imagePath = req.body.imagePath;
+  if (req.file) {
+    const url = req.protocol + "://" + req.get("host");
+    imagePath = url + "/images/" + req.file.filename;
+  }
+  const post = {
     title: req.body.title,
     content: req.body.content,
-  });
-  Post.findOneAndUpdate({ _id: req.params.id }, post).then((result) => {
-    console.log(result);
-    res.status(200).json({ message: "Post edited successfully" });
-  });
+    imagePath,
+  };
+  Post.findOneAndUpdate({ _id: req.params.id }, post)
+    .then((result) => {
+      res.status(200).json({
+        message: "Post edited successfully",
+        imagePath: result.imagePath,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 router.get("", (req, res, next) => {
