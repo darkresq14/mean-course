@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { PostsService } from 'src/app/posts.service';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Post } from '../post.model';
 import { mimeType } from 'src/utils/mime-type.validator';
 
@@ -20,7 +20,6 @@ export class PostCreateComponent implements OnInit {
 
   constructor(
     private postsService: PostsService,
-    @Inject(Router) public router: Router,
     @Inject(ActivatedRoute) public route: ActivatedRoute
   ) {}
 
@@ -95,6 +94,5 @@ export class PostCreateComponent implements OnInit {
 
     this.form.reset();
     this.isLoading = false;
-    this.router.navigate(['/']);
   };
 }

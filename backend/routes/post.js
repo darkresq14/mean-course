@@ -56,25 +56,34 @@ router.put("/:id", multer({ storage }).single("image"), (req, res, next) => {
     content: req.body.content,
     imagePath,
   };
-  Post.findOneAndUpdate({ _id: req.params.id }, post)
-    .then((result) => {
-      res.status(200).json({
-        message: "Post edited successfully",
-        imagePath: result.imagePath,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+  Post.findOneAndUpdate({ _id: req.params.id }, post).then((result) => {
+    res.status(200).json({
+      message: "Post edited successfully",
+      imagePath: result.imagePath,
     });
+  });
 });
 
 router.get("", (req, res, next) => {
-  Post.find().then((documents) => {
-    res.status(200).json({
-      message: "Posts fetched successfully!",
-      posts: documents,
+  const pageSize = +req.query.pagesize;
+  const currentPage = +req.query.page;
+  const postQuery = Post.find();
+  let fetchedPosts;
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+  postQuery
+    .then((documents) => {
+      fetchedPosts = documents;
+      return Post.count();
+    })
+    .then((count) => {
+      res.status(200).json({
+        message: "Posts fetched successfully!",
+        posts: fetchedPosts,
+        postsCount: count,
+      });
     });
-  });
 });
 
 router.get("/:id", (req, res, next) => {
@@ -92,7 +101,6 @@ router.get("/:id", (req, res, next) => {
 
 router.delete("/:id", (req, res, next) => {
   Post.findByIdAndDelete(req.params.id).then((result) => {
-    console.log(result);
     res.status(200).json({ message: "Post deleted" });
   });
 });
