@@ -10,10 +10,34 @@
         color="accent"
         routerLink="/create"
         routerLinkActive="mat-accent"
-        #rla="routerLinkActive"
-        [ngClass]="{ 'mat-accent': rla.isActive }"
+        #rlaNewPost="routerLinkActive"
+        [ngClass]="{ 'mat-accent': rlaNewPost.isActive }"
       >
         New Post
+      </a>
+    </li>
+    <li>
+      <a
+        mat-button
+        color="accent"
+        routerLink="/login"
+        routerLinkActive="mat-accent"
+        #rlaLogin="routerLinkActive"
+        [ngClass]="{ 'mat-accent': rlaLogin.isActive }"
+      >
+        Login
+      </a>
+    </li>
+    <li>
+      <a
+        mat-button
+        color="accent"
+        routerLink="/signup"
+        routerLinkActive="mat-accent"
+        #rlaSignup="routerLinkActive"
+        [ngClass]="{ 'mat-accent': rlaSignup.isActive }"
+      >
+        Signup
       </a>
     </li>
   </ul>
