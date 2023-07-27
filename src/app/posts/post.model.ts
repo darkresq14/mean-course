@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   content: string;
   imagePath: string;
+  creator: string;
 }
 
 export interface DbPost {
@@ -10,4 +11,5 @@ export interface DbPost {
   title: string;
   content: string;
   imagePath: string;
+  creator: string;
 }

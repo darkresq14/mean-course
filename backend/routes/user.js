@@ -27,17 +27,21 @@ router.post("/signup", (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   let authFailed = false;
   let token = null;
+  let fetchedUser = null;
   let error = {};
 
   try {
-    const user = await User.findOne({ email: req.body.email });
+    fetchedUser = await User.findOne({ email: req.body.email });
 
-    if (user) {
-      const result = await bcrypt.compare(req.body.password, user.password);
+    if (fetchedUser) {
+      const result = await bcrypt.compare(
+        req.body.password,
+        fetchedUser.password
+      );
 
       if (result) {
         token = jwt.sign(
-          { email: user.email, userId: user._id },
+          { email: fetchedUser.email, userId: fetchedUser._id },
           process.env.JWT_SECRET,
           { expiresIn: "1h" }
         );
@@ -55,7 +59,7 @@ router.post("/login", async (req, res, next) => {
   if (authFailed) {
     res.status(401).json({ message: "Auth failed", error });
   } else {
-    res.status(200).json({ token, expiresIn: 3600 });
+    res.status(200).json({ token, expiresIn: 3600, userId: fetchedUser._id });
   }
 });
 

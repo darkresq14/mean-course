@@ -27,6 +27,7 @@ export class PostsService {
                 title: post.title,
                 content: post.content,
                 imagePath: post.imagePath,
+                creator: post.creator,
               };
             }),
             postsCount: postData.postsCount,
@@ -45,7 +46,7 @@ export class PostsService {
   getPost(id: string) {
     return this.http.get<{
       message: string;
-      post?: { _id: string; title: string; content: string; imagePath: string };
+      post?: DbPost;
     }>('http://localhost:3000/api/posts/' + id);
   }
 
@@ -71,7 +72,7 @@ export class PostsService {
   updatePost(id: string, title: string, content: string, image: File | string) {
     let postData: Post | FormData;
     if (typeof image === 'string') {
-      postData = { id, title, content, imagePath: image };
+      postData = { id, title, content, imagePath: image, creator: null };
     } else {
       postData = new FormData();
       postData.append('id', id);
