@@ -55,7 +55,7 @@ router.post("/login", async (req, res, next) => {
   if (authFailed) {
     res.status(401).json({ message: "Auth failed", error });
   } else {
-    res.status(200).json({ token });
+    res.status(200).json({ token, expiresIn: 3600 });
   }
 });
 
