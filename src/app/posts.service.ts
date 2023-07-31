@@ -3,12 +3,15 @@ import { DbPost, Post } from './posts/post.model';
 import { Subject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<{ posts: Post[]; postsCount: number }>();
+  private postsUrl = environment.apiUrl + '/posts';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -16,7 +19,7 @@ export class PostsService {
     const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     this.http
       .get<{ message: string; posts: any; postsCount: number }>(
-        'http://localhost:3000/api/posts' + queryParams
+        this.postsUrl + queryParams
       )
       .pipe(
         map((postData) => {
@@ -47,7 +50,7 @@ export class PostsService {
     return this.http.get<{
       message: string;
       post?: DbPost;
-    }>('http://localhost:3000/api/posts/' + id);
+    }>(this.postsUrl + '/' + id);
   }
 
   getPostUpdateListener() {
@@ -60,10 +63,7 @@ export class PostsService {
     postData.append('content', content);
     postData.append('image', image, title);
     this.http
-      .post<{ message: string; post: Post }>(
-        'http://localhost:3000/api/posts',
-        postData
-      )
+      .post<{ message: string; post: Post }>(this.postsUrl, postData)
       .subscribe((_) => {
         this.router.navigate(['/']);
       });
@@ -83,7 +83,7 @@ export class PostsService {
 
     this.http
       .put<{ message: string; imagePath: string }>(
-        `http://localhost:3000/api/posts/${id}`,
+        this.postsUrl + `/${id}`,
         postData
       )
       .subscribe((_) => {
@@ -93,8 +93,6 @@ export class PostsService {
 
   deletePost(id: string) {
     if (!id) return;
-    return this.http.delete<{ message: string }>(
-      `http://localhost:3000/api/posts/${id}`
-    );
+    return this.http.delete<{ message: string }>(this.postsUrl + `/${id}`);
   }
 }
