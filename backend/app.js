@@ -2,12 +2,19 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const fs = require("fs");
 require("dotenv").config();
 
 const postRoutes = require("./routes/post");
 const userRoutes = require("./routes/user");
 
 const app = express();
+
+// Checking if the folder exists, if not, create it
+const dir = path.join(__dirname, "images");
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir, { recursive: true });
+}
 
 mongoose
   .connect(process.env.MONGODB_URI, {
