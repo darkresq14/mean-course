@@ -3,6 +3,7 @@
 .env
 
 /backend/images
+/backend/angular
 
 # Compiled output
 /dist

@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://mean-course-api.onrender.com/api',
+  apiUrl: 'http://localhost:3000/api',
+  // apiUrl: 'https://mean-course-api.onrender.com/api',
 };
