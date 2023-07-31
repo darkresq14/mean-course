@@ -28,7 +28,7 @@ mongoose
 app.use(bodyParser.json());
 
 // Mapping /images to go to /backend/images
-app.use("/images", express.static(path.join("images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
