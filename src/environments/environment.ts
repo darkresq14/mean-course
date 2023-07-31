@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'dudu',
+  apiUrl: 'https://mean-course-api.onrender.com/api',
 };
