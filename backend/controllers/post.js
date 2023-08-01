@@ -8,6 +8,7 @@ exports.createPost = (req, res, next) => {
     imagePath: url + "/images/" + req.file.filename,
     creator: req.userData.userId,
   });
+  console.log("createPost - beforeSave - imagePath: ", post.imagePath);
   post
     .save()
     .then((result) => {
@@ -24,6 +25,7 @@ exports.createPost = (req, res, next) => {
     .catch(() => {
       res.status(500).json({ message: "Creating a post failed!" });
     });
+  console.log("After save");
 };
 
 exports.updatePost = (req, res, next) => {

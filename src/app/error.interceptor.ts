@@ -20,8 +20,11 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
+        console.log('Error happened: ', err);
         let errorMessage = 'An unknown error occurred!';
-        if (err.error.message) {
+        if (err.message) {
+          errorMessage = err.message;
+        } else if (err.error.message) {
           errorMessage = err.error.message;
         } else if (err.error.error.message) {
           errorMessage = err.error.error.message;
