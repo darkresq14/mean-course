@@ -103,7 +103,6 @@ export class PostCreateComponent implements OnInit, OnDestroy {
           this.form.value.image
         );
 
-    this.form.reset();
     this.isLoading = false;
   };
 

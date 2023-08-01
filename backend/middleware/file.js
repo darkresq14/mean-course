@@ -13,8 +13,13 @@ const storage = multer.diskStorage({
     if (isValid) {
       error = null;
     }
-    console.log("Saving ", file, " to images");
-    cb(error, "images");
+    if (process.env.NODE_ENV === "development") {
+      // For local development
+      cb(error, "backend/images");
+    } else {
+      // For production
+      cb(error, "images");
+    }
   },
   filename: (req, file, cb) => {
     const name = file.originalname.toLowerCase().split(" ").join("-");
