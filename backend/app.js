@@ -26,9 +26,13 @@ mongoose
   );
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// Mapping /images to go to /backend/images
-app.use("/images", express.static(path.join("backend/images")));
+if (process.env.NODE_ENV === "development") {
+  app.use("/images", express.static(path.join("backend/images")));
+} else {
+  app.use("/images", express.static(path.join(__dirname, "images")));
+}
 app.use("/", express.static(path.join(__dirname, "angular")));
 
 // CORS not needed for integrated hosting approach
