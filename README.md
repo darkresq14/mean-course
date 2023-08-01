@@ -13,4 +13,4 @@ Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The 
 
 ## Hosting
 
-Separate hosting of the Angular frontend and the Node backend is possible. The Angular frontend is hosted on [render - static site](https://mean-course-frontend.onrender.com) and the Node backend is hosted on [render - web service](https://mean-course-api.onrender.com/api).
+Integrated hosting with [render - web service](https://mean-course-integrated.onrender.com) by poitning to static Angular site.
